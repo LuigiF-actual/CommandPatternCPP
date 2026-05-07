@@ -1,5 +1,5 @@
 ﻿// CommandPattern.h : Include file for standard system include files,
-// or project specific include files.
+// or project specific includee files. 
 
 #pragma once
 
