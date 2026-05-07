@@ -9,10 +9,12 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project ("CommandPattern")
+project ("CommandPattern" LANGUAGES CXX)
 
 # Add source to this project's executable.
-add_executable (CommandPattern "CommandPattern.cpp" "CommandPattern.h")
+add_executable(CommandPattern 
+    "source/main.cpp"
+)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET CommandPattern PROPERTY CXX_STANDARD 20)
@@ -37,4 +39,8 @@ file(REMOVE_RECURSE ${raylib_SOURCE_DIR}/projects)
 
 # TODO: Add tests and install targets if needed.
 target_link_libraries(CommandPattern
-raylib)
+    raylib
+)
+
+target_include_directories(CommandPattern PUBLIC "include")
+
