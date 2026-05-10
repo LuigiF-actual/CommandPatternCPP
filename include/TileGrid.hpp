@@ -38,7 +38,24 @@ public:
 
 	Tile& at(unsigned int column, unsigned int row)
 	{
-		return m_TileGrid.at(column * m_GridW + row);
+		return m_TileGrid.at(column * m_GridW + row); 
+	}
+
+	auto& getArr()
+	{
+		return m_TileGrid;
+	}
+
+	Tile* findTile(Vector2 position)
+	{
+		for (auto& tile : m_TileGrid)
+		{
+			if (CheckCollisionPointRec(position, tile.body))
+			{
+				return &tile;
+			}
+		}
+		return nullptr;
 	}
 
 private:
