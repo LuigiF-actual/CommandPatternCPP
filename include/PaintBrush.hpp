@@ -1,11 +1,14 @@
 #pragma once
 
+#include <iostream>
 #include <array>
 
 #include <raylib.h>
 #include "TileGrid.hpp"
 #include "PlayerMouse.hpp"
+#include "Command.hpp"
 #include "Config.hpp"
+#include "KeyboardManager.hpp"
 
 
 class PaintBrush
@@ -44,29 +47,53 @@ public:
 	{
 		draw();
 		checkMouseInput();
+		checkKeyboard();
 	}
 
 
 	void checkMouseInput()
 	{
-		if (m_PlMouse.isMouseClicked())
+		if ((m_PlMouse.isMouseClicked()) && (m_PlMouse.getMousePos().x < 1000))
 		{
 			Tile* p_Tile = mp_TileGrid->findTile(m_PlMouse.getMousePos());
 			if (p_Tile)
 			{
-				p_Tile->color = m_CurrentColor;
+				cmd.execute(*p_Tile, m_CurrentColor);
 			}
+		}
+		else
+		{
+			for (Tile& tile : m_PaintbrushColors)
+			{
+				if (CheckCollisionPointRec(m_PlMouse.getMousePos(), tile.body))
+				{
+					m_CurrentColor = tile.color;
+					break;
+				}
+			}
+		}
+	}
+
+	void checkKeyboard()
+	{
+		if (keyboard.ctrlZ())
+		{
+			cmd.undo();
+ 		}
+		if (keyboard.ctrlY())
+		{
+			cmd.redo();
 		}
 	}
 
 private:
 	PlayerMouse m_PlMouse;
+	KeyboardManager keyboard;
 
 	Color m_CurrentColor = BLACK;
 
 	TileGrid* mp_TileGrid;
-	
 
 	std::array<Tile, 4> m_PaintbrushColors;
-
+	CommandManager cmd;
 };
