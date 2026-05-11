@@ -15,37 +15,24 @@ class PaintBrush
 {
 
 public:
-	PaintBrush(TileGrid& p_TileGrid) 
-		: mp_TileGrid(&p_TileGrid)
-	{
-		for (size_t i = 0; i < m_PaintbrushColors.size(); i++)
+	PaintBrush(TileGrid& TileGrid_, TileGrid& ColorPallete_) 
+		: m_TileGrid(TileGrid_),
+		  m_ColorPallete(ColorPallete_)
+	{	
+		int tempCounter = 0;
+		for (auto& tile : m_ColorPallete.getArr())
 		{
-			unsigned char mul = static_cast<unsigned char>(i*30); //Changes the collor of the tile every iteration of the loop
+			unsigned char mul = static_cast<unsigned char>(tempCounter * 30); //Changes the collor of the tile every iteration of the loop
 
-			m_PaintbrushColors.at(i).body = Rectangle{ Config::PALETTE_X ,(float)i * Config::TILE_SIZE + Config::GRID_OFFSET_X,Config::TILE_SIZE,Config::TILE_SIZE };
-			m_PaintbrushColors.at(i).color = Color{ mul,mul,mul,255};
+			tile.body = Rectangle{ Config::PALETTE_X ,(float)tempCounter * Config::TILE_SIZE + Config::GRID_OFFSET_X,Config::TILE_SIZE,Config::TILE_SIZE };
+			tile.color = Color{ mul,mul,mul,255 };
+			tempCounter++;
 		}
 	}
 	
-	void apply(unsigned int x, unsigned int y)
-	{
-		if (mp_TileGrid != nullptr)
-		{
-			
-		}
-	}
-
-	void draw()
-	{
-		for (auto& tile : m_PaintbrushColors)
-		{
-			DrawRectangleRec(tile.body, tile.color);
-		}
-	}
 
 	void update()
 	{
-		draw();
 		checkMouseInput();
 		checkKeyboard();
 	}
@@ -53,9 +40,9 @@ public:
 
 	void checkMouseInput()
 	{
-		if ((m_PlMouse.isMouseClicked()) && (m_PlMouse.getMousePos().x < 1000))
+		if ((m_PlMouse.isMouseClicked()) && (m_PlMouse.getMousePos().x < m_ColorPallete.getArr().at(0).body.x))
 		{
-			Tile* p_Tile = mp_TileGrid->findTile(m_PlMouse.getMousePos());
+			Tile* p_Tile = m_TileGrid.findTile(m_PlMouse.getMousePos());
 			if (p_Tile)
 			{
 				cmd.execute(*p_Tile, m_CurrentColor);
@@ -63,7 +50,7 @@ public:
 		}
 		else
 		{
-			for (Tile& tile : m_PaintbrushColors)
+			for (Tile& tile : m_ColorPallete.getArr())
 			{
 				if (CheckCollisionPointRec(m_PlMouse.getMousePos(), tile.body))
 				{
@@ -92,8 +79,8 @@ private:
 
 	Color m_CurrentColor = BLACK;
 
-	TileGrid* mp_TileGrid;
+	TileGrid& m_TileGrid;
+	TileGrid& m_ColorPallete;
 
-	std::array<Tile, 4> m_PaintbrushColors;
 	CommandManager cmd;
 };

@@ -38,15 +38,6 @@ public:
 		}
 	}
 
-	void draw() const
-	{
-		for (auto& tile : m_TileGrid)
-		{
-			DrawRectangleRec(tile.body, tile.color);
-			DrawRectangleLinesEx(tile.body, 1.0f, BLACK);
-		}
-	}
-
 	Tile& at(unsigned int column, unsigned int row)
 	{
 		return m_TileGrid.at(column * m_GridW + row); 
@@ -80,4 +71,20 @@ private:
 	Vector2 m_TileSize = { 100.0f,100.0f };
 
 	std::vector<Tile> m_TileGrid;
+};
+
+class TileRenderer
+{
+public:
+	TileRenderer() = default;
+
+	void draw(TileGrid& mp_GridToDraw) const
+	{
+		for (auto& tile : mp_GridToDraw.getArr())
+		{
+			DrawRectangleRec(tile.body, tile.color);
+			DrawRectangleLinesEx(tile.body, 1.0f, BLACK);
+		}
+	}
+
 };

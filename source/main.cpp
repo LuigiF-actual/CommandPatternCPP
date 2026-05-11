@@ -12,8 +12,10 @@ int main(void)
 
     SetTargetFPS(60);               
 
+    TileRenderer tileRenderer;
     TileGrid tilegrid(4,4,{100.0f,100.0f});
-    PaintBrush paintbrush(tilegrid);
+    TileGrid colorPallete(4, 1,{1000.f, 400.f});
+    PaintBrush paintbrush(tilegrid,colorPallete);
 
     while (!WindowShouldClose())    
     {
@@ -21,9 +23,10 @@ int main(void)
 
         ClearBackground(RAYWHITE);
 
-        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-        tilegrid.draw();
+        tileRenderer.draw(tilegrid);
+        tileRenderer.draw(tilegrid);
         paintbrush.update();
+
         EndDrawing();
     }
 
