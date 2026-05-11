@@ -12,7 +12,7 @@ int main(void)
 
     SetTargetFPS(60);               
 
-    TileGrid tilegrid;
+    TileGrid tilegrid(4,4,{100.0f,100.0f});
     PaintBrush paintbrush(tilegrid);
 
     while (!WindowShouldClose())    

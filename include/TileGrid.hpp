@@ -2,9 +2,11 @@
 
 
 #include <iostream>
-#include <array>
+#include <vector>
 
 #include <raylib.h>
+
+
 
 struct Tile
 {
@@ -15,14 +17,23 @@ struct Tile
 class TileGrid
 {
 public:
-	TileGrid()
+	TileGrid(size_t columnNums, size_t rowNums, Vector2 gridOffSet)
+		: m_GridW(columnNums),
+		  m_GridH(rowNums),
+		  m_GridOffSet(gridOffSet)
 	{
 		for (size_t row = 0; row < m_GridH; row++)
 		{
 			for (size_t column = 0; column < m_GridW; column++)
 			{
-				m_TileGrid.at(row * m_GridW + column).body = Rectangle{ float(column * 100 + 300), float(row * 100 + 200), 100, 100 };
-				m_TileGrid.at(row * m_GridW + column).color = RED;
+				m_TileGrid.emplace_back(
+					Tile
+					{
+						RED,
+						Rectangle{float(column * m_TileSize.x + m_GridOffSet.x), float(row * m_TileSize.y + m_GridOffSet.y), m_TileSize.x, m_TileSize.y}
+
+					}
+				);
 			}
 		}
 	}
@@ -60,9 +71,13 @@ public:
 
 private:
 
-	static constexpr unsigned int m_GridH = 4;
-	static constexpr unsigned int m_GridW = 4;
-	static constexpr unsigned int m_GridSize = m_GridH * m_GridW;
 
-	std::array<Tile, m_GridSize > m_TileGrid;
+
+	size_t m_GridH = 0;
+	size_t m_GridW = 0;
+	Vector2 m_GridOffSet = { 0.0f,0.0f };
+
+	Vector2 m_TileSize = { 100.0f,100.0f };
+
+	std::vector<Tile> m_TileGrid;
 };
